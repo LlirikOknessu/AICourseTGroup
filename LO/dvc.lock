@@ -1,0 +1,18 @@
+schema: '2.0'
+stages:
+  prepare_data:
+    cmd: python preparation.py
+    deps:
+    - path: data/raw/ds_salaries.csv
+      hash: md5
+      md5: 6ca0927de194ef267f23e8bfb096dd79
+      size: 37568
+    - path: preparation.py
+      hash: md5
+      md5: 447166dd509a50b29ef4c44262293b65
+      size: 1245
+    outs:
+    - path: data/prepared/preprocessed_data.csv
+      hash: md5
+      md5: 84a798c42383b15a155e5bfff9fd8582
+      size: 36642

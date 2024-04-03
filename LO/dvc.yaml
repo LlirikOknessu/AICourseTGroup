@@ -1,0 +1,14 @@
+stages:
+  prepare_data:
+    cmd: python preparation.py
+    deps:
+      - data/raw/ds_salaries.csv
+      - preparation.py
+    outs:
+      - data/prepared/preprocessed_data.csv
+  linear_regression_train:
+    cmd: python model_training.py
+    deps:
+      - data/prepared/preprocessed_data.csv
+    outs:
+      - data/models/lr.csv
