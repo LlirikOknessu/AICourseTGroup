@@ -1,0 +1,26 @@
+schema: '2.0'
+stages:
+  data_preparation:
+    cmd: python data_preparation.py -id data/raw -od data/prepared
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 29a6f7b1cbbf335a69bb870be2962e01.dir
+      size: 103518
+      nfiles: 2
+    - path: data_preparation.py
+      hash: md5
+      md5: 066b251230d93344636827a6a65d6438
+      size: 3598
+    params:
+      params.yaml:
+        data_preparation:
+          train_test_ratio: 0.8
+          train_val_raitio: 0.95
+          random_state: 42
+    outs:
+    - path: data/prepared
+      hash: md5
+      md5: 3b29a4de14be598b6b5d83f619c5fbab.dir
+      size: 146862
+      nfiles: 8
