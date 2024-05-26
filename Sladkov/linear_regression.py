@@ -5,8 +5,10 @@ import yaml
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import Ridge
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 from joblib import dump
+from sklearn.preprocessing import StandardScaler
+from joblib import load
 
 LINEAR_MODELS_MAPPER = {'Ridge': Ridge,
                         'LinearRegression': LinearRegression}
@@ -33,6 +35,8 @@ if __name__ == '__main__':
     output_model_path = output_dir / (args.model_name + '.csv')
     output_model_joblib_path = output_dir / (args.model_name + '.joblib')
 
+    scaler = load(input_dir / 'scaler.pkl')
+    
     X_train_name = input_dir / 'X_train.csv'
     y_train_name = input_dir / 'y_train.csv'
     X_test_name = input_dir / 'X_test.csv'
@@ -48,14 +52,19 @@ if __name__ == '__main__':
     y_mean = y_test.mean()
     y_std = y_test.std()
     y_pred_std= np.random.normal(loc=y_mean, scale=y_std, size=len(y_test))
+    predicted_values = np.squeeze(scaler.inverse_transform(reg.predict(X_test)))
 
-    predicted_values = np.squeeze(reg.predict(X_test))
 
+    y_pred_std = scaler.inverse_transform(np.reshape(y_pred_std, (-1, 1)))
     print(reg.score(X_test, y_test))
-    print("Mean charges: ", y_mean)
+    y_test = scaler.inverse_transform(y_test)
+    print("Mean charges: ", y_mean) 
+
     print("STD MAE: ", mean_absolute_error(y_test, y_pred_std))
     print("Model MAE: ", mean_absolute_error(y_test, predicted_values))
 
+    print("STD MSE: ", mean_squared_error(y_test, y_pred_std))
+    print("Model MSE: ", mean_squared_error(y_test, predicted_values))
     intercept = reg.intercept_.astype(float)
     coefficients = reg.coef_.astype(float)
     intercept = pd.Series(intercept, name='intercept')
@@ -66,4 +75,4 @@ if __name__ == '__main__':
     out_model = pd.DataFrame([coefficients, intercept])
     out_model.to_csv(output_model_path, index=False)
 
-    dump(reg, output_model_joblib_path)
+    dump(reg, output_model_joblib_path)   

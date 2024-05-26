@@ -4,7 +4,8 @@ from pathlib import Path
 import yaml
 import numpy as np
 from sklearn.model_selection import train_test_split
-
+from sklearn.preprocessing import StandardScaler
+import joblib
 def parser_args_for_sac():
     parser = argparse.ArgumentParser(description='Paths parser')
     parser.add_argument('--input_dir', '-id', type=str, default='data/raw/',
@@ -17,12 +18,23 @@ def parser_args_for_sac():
 
 def to_categorical(df: pd.DataFrame):
     df['smoker'] = pd.Categorical(df['smoker']).codes
+    df['sex'] = pd.Categorical(df['sex']).codes
     return df
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
-    df.drop(['sex', 'children', 'region'], axis=1, inplace=True)
+    df.drop(['children', 'region'], axis=1, inplace=True)
     df = to_categorical(df)
     return df
+
+def normalize_data(df: pd.DataFrame) -> pd.DataFrame:
+    scaler_x = StandardScaler()
+    scaler_y = StandardScaler()
+    X,y = df.drop("charges", axis=1), df[['charges']]
+    X_normalized = pd.DataFrame(scaler_x.fit_transform(X), columns=X.columns)
+    y_normalized = pd.DataFrame(scaler_y.fit_transform(y))
+    scaler_path = output_dir / 'scaler.pkl'
+    joblib.dump(scaler_y, scaler_path)
+    return X_normalized,y_normalized
 
 if __name__ == '__main__':
     args = parser_args_for_sac()
@@ -38,7 +50,9 @@ if __name__ == '__main__':
     for data_file in input_dir.glob('*.csv'):
         full_data = pd.read_csv(data_file)
         cleaned_data = clean_data(df=full_data)
-        X, y = cleaned_data.drop("charges", axis=1), cleaned_data['charges']
+        # normalized_data = normalize_data(cleaned_data)
+        # X, y = normalized_data.drop("charges", axis=1), normalized_data['charges']
+        X,y = normalize_data(cleaned_data)
         X_train , X_test, y_train, y_test = train_test_split(X, y,
                                                             train_size=params.get('train_test_ratio'),
                                                             random_state=params.get('random_state'))

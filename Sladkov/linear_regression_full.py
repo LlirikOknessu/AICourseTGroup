@@ -6,7 +6,8 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_absolute_error
-from joblib import dump
+from joblib import dump, load
+from sklearn.preprocessing import StandardScaler
 
 LINEAR_MODELS_MAPPER = {'Ridge': Ridge,
                         'LinearRegression': LinearRegression}
@@ -28,7 +29,7 @@ if __name__ == '__main__':
 
     input_dir = Path(args.input_dir)
     output_dir = Path(args.output_dir)
-
+    scaler = load(input_dir / 'scaler.pkl')
     output_dir.mkdir(exist_ok=True, parents=True)
     output_model_path = output_dir / (args.model_name + '_prod.csv')
     output_model_joblib_path = output_dir / (args.model_name + '_prod.joblib')
@@ -36,7 +37,7 @@ if __name__ == '__main__':
     X_full_name = input_dir / 'X_full.csv'
     y_full_name = input_dir / 'y_full.csv'
 
-    X_full = pd.read_csv(X_full_name)
+    X_full = pd.read_csv(X_full_name)  
     y_full = pd.read_csv(y_full_name)
 
     reg = LINEAR_MODELS_MAPPER.get(args.model_name)().fit(X_full, y_full)
@@ -50,4 +51,4 @@ if __name__ == '__main__':
     columns = [x for x in range(len(coefficients))]
     out_model = pd.DataFrame([coefficients, intercept])
     out_model.to_csv(output_model_path, index=False)
-    dump(reg, output_model_joblib_path)
+    dump(reg, output_model_joblib_path) 
