@@ -1,0 +1,26 @@
+cmd: python data_preparation.py -id data/raw -od data/prepared -p params.yaml
+deps:
+- path: data/raw/life_expectancy_data.csv
+  hash: md5
+  md5: 000b9918a92597a09c645549d5a54993
+  size: 337245
+- path: data_preparation.py
+  hash: md5
+  md5: 4c54f38982d8af820b55680ce7566034
+  size: 3001
+- path: params.yaml
+  hash: md5
+  md5: 96317767e103a0f9344b12aa5dba82c3
+  size: 250
+params:
+  params.yaml:
+    data_preparation:
+      train_test_ratio: 0.8
+      train_val_ratio: 0.75
+      random_state: 42
+outs:
+- path: data/prepared
+  hash: md5
+  md5: 2ccb4382c5162b129ddb2071f571b1d4.dir
+  size: 624796
+  nfiles: 8
