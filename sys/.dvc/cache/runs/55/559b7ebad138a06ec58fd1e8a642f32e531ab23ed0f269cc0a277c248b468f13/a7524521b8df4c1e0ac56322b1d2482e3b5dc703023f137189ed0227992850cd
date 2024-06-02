@@ -1,0 +1,32 @@
+cmd: python lstm_train.py -id data/prepared -od data/models -mn lstm_model -p params.yaml
+deps:
+- path: data/prepared
+  hash: md5
+  md5: a06ada7592aa32d4de5ac48d8d02c115.dir
+  size: 139504
+  nfiles: 8
+- path: lstm_train.py
+  hash: md5
+  md5: f4c931d04994fecc8af276ab626e2aa8
+  size: 2589
+- path: params.yaml
+  hash: md5
+  md5: 9a3363ed291e696676815b7f95f5e1a0
+  size: 248
+params:
+  params.yaml:
+    lstm:
+      lstm_units: 50
+      optimizer: adam
+      loss: mse
+      epochs: 100
+      batch_size: 32
+outs:
+- path: data/models/lstm_model.h5
+  hash: md5
+  md5: 97b4dea215df1a6253626954d8b88793
+  size: 229136
+- path: data/models/lstm_model_scaler.pkl
+  hash: md5
+  md5: e110c641c9c055aab276a7b686b947b4
+  size: 2087
