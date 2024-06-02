@@ -1,0 +1,26 @@
+cmd: python data_preparation.py -id data/raw -od data/prepared -p params.yaml
+deps:
+- path: data/raw/housing.csv
+  hash: md5
+  md5: 2baa110b179b261b9efbdbeda1e8537a
+  size: 1323849
+- path: data_preparation.py
+  hash: md5
+  md5: 9a8e23f7ad2f80f4ab4bc27f775ec707
+  size: 2974
+- path: params.yaml
+  hash: md5
+  md5: 0502c02646fd5fd70f3326fd5592c349
+  size: 246
+params:
+  params.yaml:
+    data_preparation:
+      train_test_ratio: 0.8
+      train_val_ratio: 0.75
+      random_state: 42
+outs:
+- path: data/prepared
+  hash: md5
+  md5: 97ec7e7b688b067ec913379e05b73999.dir
+  size: 3278896
+  nfiles: 8

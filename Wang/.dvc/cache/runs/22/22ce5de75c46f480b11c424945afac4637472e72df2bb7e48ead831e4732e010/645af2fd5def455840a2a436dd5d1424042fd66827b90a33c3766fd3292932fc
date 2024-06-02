@@ -1,0 +1,32 @@
+cmd: python gru_train.py -id data/prepared -od data/models -mn gru_model -p params.yaml
+deps:
+- path: data/prepared
+  hash: md5
+  md5: 97ec7e7b688b067ec913379e05b73999.dir
+  size: 3278896
+  nfiles: 8
+- path: gru_train.py
+  hash: md5
+  md5: b0570f235a4eeb86deb67e4614bed3a3
+  size: 2581
+- path: params.yaml
+  hash: md5
+  md5: 0502c02646fd5fd70f3326fd5592c349
+  size: 246
+params:
+  params.yaml:
+    gru:
+      gru_units: 50
+      optimizer: adam
+      loss: mse
+      epochs: 100
+      batch_size: 32
+outs:
+- path: data/models/gru_model.h5
+  hash: md5
+  md5: 98c8aa2ef43ae46534051967d6eb86f4
+  size: 144288
+- path: data/models/gru_model_scaler.pkl
+  hash: md5
+  md5: 8dbf5cd06c265679e27026a21d323773
+  size: 1463

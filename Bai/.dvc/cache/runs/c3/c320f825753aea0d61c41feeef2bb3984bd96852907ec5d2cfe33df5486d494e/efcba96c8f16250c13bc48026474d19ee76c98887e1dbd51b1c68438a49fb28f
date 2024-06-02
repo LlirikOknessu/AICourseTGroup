@@ -1,0 +1,26 @@
+cmd: python data_preparation.py -id data/raw -od data/prepared -p params.yaml
+deps:
+- path: data/raw/test_scores.csv
+  hash: md5
+  md5: dedbbc2822e89a304dc36cb350198b37
+  size: 171367
+- path: data_preparation.py
+  hash: md5
+  md5: 99b944153c6481d0c4361a00a6e1a5fe
+  size: 2969
+- path: params.yaml
+  hash: md5
+  md5: 0502c02646fd5fd70f3326fd5592c349
+  size: 246
+params:
+  params.yaml:
+    data_preparation:
+      train_test_ratio: 0.8
+      train_val_ratio: 0.75
+      random_state: 42
+outs:
+- path: data/prepared
+  hash: md5
+  md5: 1f4b09b612e0a1437e01e9e297e591ab.dir
+  size: 146846
+  nfiles: 8

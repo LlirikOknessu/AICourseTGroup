@@ -1,0 +1,14 @@
+data_preparation:
+  train_test_ratio: 0.8
+  train_val_ratio: 0.75
+  random_state: 42
+
+linear_regression:
+  model_name: "linear_regression_model"
+
+gru:
+  gru_units: 50
+  optimizer: "adam"
+  loss: "mse"
+  epochs: 100
+  batch_size: 32
