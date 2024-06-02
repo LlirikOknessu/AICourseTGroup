@@ -1,0 +1,69 @@
+stages:
+  data_preparation:
+    cmd: python data_preparation.py -id data/raw -od data/prepared -p params.yaml
+    deps:
+      - data_preparation.py
+      - data/raw/student-mat.csv
+      - data/raw/student-por.csv
+      - params.yaml
+    outs:
+      - data/prepared
+    params:
+      - data_preparation
+
+  linear_regression:
+    cmd: python linear_regression.py -id data/prepared -od data/models -mn ${linear_regression.model_name} -p params.yaml
+    deps:
+      - linear_regression.py
+      - data/prepared
+      - params.yaml
+    outs:
+      - data/models/${linear_regression.model_name}.csv
+      - data/models/${linear_regression.model_name}.joblib
+    params:
+      - linear_regression
+
+  linear_regression_validation:
+    cmd: python linear_regression_validation.py -id data/prepared/ -im data/models/${linear_regression.model_name}.joblib -p params.yaml
+    deps:
+      - linear_regression_validation.py
+      - data/prepared/
+      - data/models/${linear_regression.model_name}.joblib
+      - params.yaml
+    params:
+      - linear_regression
+
+  linear_regression_prod_version:
+    cmd: python linear_regression_full.py -id data/prepared/ -od data/models/ -mn ${linear_regression.model_name} -p params.yaml
+    deps:
+      - linear_regression_full.py
+      - data/prepared
+      - params.yaml
+    outs:
+      - data/models/${linear_regression.model_name}_prod_coefficients.csv
+      - data/models/${linear_regression.model_name}_prod.joblib
+    params:
+      - linear_regression
+
+  lstm_train:
+    cmd: python bp_train.py -id data/prepared -od data/models -mn lstm_model -p params.yaml
+    deps:
+      - bp_train.py
+      - data/prepared
+      - params.yaml
+    outs:
+      - data/models/lstm_model.h5
+      - data/models/lstm_model_scaler.pkl
+    params:
+      - lstm
+
+  lstm_validation:
+    cmd: python bp_model_validation.py -id data/prepared -im data/models/lstm_model.h5 -p params.yaml
+    deps:
+      - bp_model_validation.py
+      - data/prepared/
+      - data/models/lstm_model.h5
+      - data/models/lstm_model_scaler.pkl
+      - params.yaml
+    params:
+      - lstm

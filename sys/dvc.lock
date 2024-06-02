@@ -1,0 +1,185 @@
+schema: '2.0'
+stages:
+  data_preparation:
+    cmd: python data_preparation.py -id data/raw -od data/prepared -p params.yaml
+    deps:
+    - path: data/raw/student-mat.csv
+      hash: md5
+      md5: 2ea11f11d4cc6083c27558e164816ec3
+      size: 39024
+    - path: data/raw/student-por.csv
+      hash: md5
+      md5: 1066be8ef04593a757487d2625d6db89
+      size: 63858
+    - path: data_preparation.py
+      hash: md5
+      md5: fb3e0bb946dee70e8964a0c73e2fc4b6
+      size: 3083
+    - path: params.yaml
+      hash: md5
+      md5: 9a3363ed291e696676815b7f95f5e1a0
+      size: 248
+    params:
+      params.yaml:
+        data_preparation:
+          train_test_ratio: 0.8
+          train_val_ratio: 0.75
+          random_state: 42
+    outs:
+    - path: data/prepared
+      hash: md5
+      md5: a06ada7592aa32d4de5ac48d8d02c115.dir
+      size: 139504
+      nfiles: 8
+  linear_regression:
+    cmd: python linear_regression.py -id data/prepared -od data/models -mn linear_regression_model
+      -p params.yaml
+    deps:
+    - path: data/prepared
+      hash: md5
+      md5: a06ada7592aa32d4de5ac48d8d02c115.dir
+      size: 139504
+      nfiles: 8
+    - path: linear_regression.py
+      hash: md5
+      md5: 37a4c7b55dde3b280552c6fd16aeeefb
+      size: 1414
+    - path: params.yaml
+      hash: md5
+      md5: 9a3363ed291e696676815b7f95f5e1a0
+      size: 248
+    params:
+      params.yaml:
+        linear_regression:
+          model_name: linear_regression_model
+    outs:
+    - path: data/models/linear_regression_model.csv
+      hash: md5
+      md5: 8228d08a1a13b04d3878c20f0a732ef1
+      size: 746
+    - path: data/models/linear_regression_model.joblib
+      hash: md5
+      md5: d31d6b3542847f84861eea4554e050ad
+      size: 1775
+  linear_regression_validation:
+    cmd: python linear_regression_validation.py -id data/prepared/ -im data/models/linear_regression_model.joblib
+      -p params.yaml
+    deps:
+    - path: data/models/linear_regression_model.joblib
+      hash: md5
+      md5: d31d6b3542847f84861eea4554e050ad
+      size: 1775
+    - path: data/prepared/
+      hash: md5
+      md5: a06ada7592aa32d4de5ac48d8d02c115.dir
+      size: 139504
+      nfiles: 8
+    - path: linear_regression_validation.py
+      hash: md5
+      md5: 6c35e0dfd7ea359e0737459f987e4524
+      size: 1455
+    - path: params.yaml
+      hash: md5
+      md5: 9a3363ed291e696676815b7f95f5e1a0
+      size: 248
+    params:
+      params.yaml:
+        linear_regression:
+          model_name: linear_regression_model
+  linear_regression_prod_version:
+    cmd: python linear_regression_full.py -id data/prepared/ -od data/models/ -mn
+      linear_regression_model -p params.yaml
+    deps:
+    - path: data/prepared
+      hash: md5
+      md5: a06ada7592aa32d4de5ac48d8d02c115.dir
+      size: 139504
+      nfiles: 8
+    - path: linear_regression_full.py
+      hash: md5
+      md5: 2ea56caead0eafb6e58ae24a2d3fca53
+      size: 1680
+    - path: params.yaml
+      hash: md5
+      md5: 9a3363ed291e696676815b7f95f5e1a0
+      size: 248
+    params:
+      params.yaml:
+        linear_regression:
+          model_name: linear_regression_model
+    outs:
+    - path: data/models/linear_regression_model_prod.joblib
+      hash: md5
+      md5: fcf2779d0865fa25c578dde7db9e6c01
+      size: 1775
+    - path: data/models/linear_regression_model_prod_coefficients.csv
+      hash: md5
+      md5: 7ea15f873f49373199c79dfcca578092
+      size: 933
+  lstm_train:
+    cmd: python lstm_train.py -id data/prepared -od data/models -mn lstm_model -p
+      params.yaml
+    deps:
+    - path: data/prepared
+      hash: md5
+      md5: a06ada7592aa32d4de5ac48d8d02c115.dir
+      size: 139504
+      nfiles: 8
+    - path: lstm_train.py
+      hash: md5
+      md5: f4c931d04994fecc8af276ab626e2aa8
+      size: 2589
+    - path: params.yaml
+      hash: md5
+      md5: 9a3363ed291e696676815b7f95f5e1a0
+      size: 248
+    params:
+      params.yaml:
+        lstm:
+          lstm_units: 50
+          optimizer: adam
+          loss: mse
+          epochs: 100
+          batch_size: 32
+    outs:
+    - path: data/models/lstm_model.h5
+      hash: md5
+      md5: 97b4dea215df1a6253626954d8b88793
+      size: 229136
+    - path: data/models/lstm_model_scaler.pkl
+      hash: md5
+      md5: e110c641c9c055aab276a7b686b947b4
+      size: 2087
+  lstm_validation:
+    cmd: python lstm_validation.py -id data/prepared -im data/models/lstm_model.h5
+      -p params.yaml
+    deps:
+    - path: data/models/lstm_model.h5
+      hash: md5
+      md5: 97b4dea215df1a6253626954d8b88793
+      size: 229136
+    - path: data/models/lstm_model_scaler.pkl
+      hash: md5
+      md5: e110c641c9c055aab276a7b686b947b4
+      size: 2087
+    - path: data/prepared/
+      hash: md5
+      md5: a06ada7592aa32d4de5ac48d8d02c115.dir
+      size: 139504
+      nfiles: 8
+    - path: lstm_validation.py
+      hash: md5
+      md5: 05eb272b2190baf2cc64f369ae758352
+      size: 1714
+    - path: params.yaml
+      hash: md5
+      md5: 9a3363ed291e696676815b7f95f5e1a0
+      size: 248
+    params:
+      params.yaml:
+        lstm:
+          lstm_units: 50
+          optimizer: adam
+          loss: mse
+          epochs: 100
+          batch_size: 32
