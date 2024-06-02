@@ -1,0 +1,222 @@
+schema: '2.0'
+stages:
+  data_preparation:
+    cmd: python data_preparation.py -id data/raw -od data/prepared
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: b2a683bf5827881f34096b14909a1b15.dir
+      size: 51759
+      nfiles: 1
+    - path: data_preparation.py
+      hash: md5
+      md5: fbc470de2f794f5149f48294adfc7c7a
+      size: 3545
+    params:
+      params.yaml:
+        data_preparation:
+          train_test_ratio: 0.7
+          train_val_raitio: 0.8
+          random_state: 42
+    outs:
+    - path: data/prepared
+      hash: md5
+      md5: da3edcc5e1fc80cc702c9be7cf8e239e.dir
+      size: 249505
+      nfiles: 9
+  linear_regression:
+    cmd: python linear_regression.py -id data/prepared -od data/models -mn LinearRegression
+    deps:
+    - path: data/prepared
+      hash: md5
+      md5: da3edcc5e1fc80cc702c9be7cf8e239e.dir
+      size: 249505
+      nfiles: 9
+    - path: linear_regression.py
+      hash: md5
+      md5: 72abe985ec3a902fab10c521302cd5bd
+      size: 3077
+    params:
+      params.yaml:
+        linear_regression:
+          model_name: LinearRegression
+    outs:
+    - path: data/models/LinearRegression.csv
+      hash: md5
+      md5: 0837327c61c9c1a5f41856f76ef47b63
+      size: 118
+    - path: data/models/LinearRegression.joblib
+      hash: md5
+      md5: ef2deabd5e5bd6c4d51e3938c9f5f489
+      size: 965
+  linear_regression_validation:
+    cmd: python linear_regression_validation.py -id data/prepared/ -im data/models/LinearRegression.joblib
+      -mn LinearRegression
+    deps:
+    - path: data/models/LinearRegression.joblib
+      hash: md5
+      md5: ef2deabd5e5bd6c4d51e3938c9f5f489
+      size: 965
+    - path: data/prepared/
+      hash: md5
+      md5: da3edcc5e1fc80cc702c9be7cf8e239e.dir
+      size: 249505
+      nfiles: 9
+    - path: linear_regression_validation.py
+      hash: md5
+      md5: d98f3980e6f6d0e912ca10f8fef7674d
+      size: 2124
+    params:
+      params.yaml:
+        linear_regression:
+          model_name: LinearRegression
+  linear_regression_prod_version:
+    cmd: python linear_regression_full.py -id data/prepared/ -od data/models/ -mn
+      LinearRegression
+    deps:
+    - path: data/models/LinearRegression.joblib
+      hash: md5
+      md5: ef2deabd5e5bd6c4d51e3938c9f5f489
+      size: 965
+    - path: data/prepared
+      hash: md5
+      md5: da3edcc5e1fc80cc702c9be7cf8e239e.dir
+      size: 249505
+      nfiles: 9
+    - path: linear_regression_full.py
+      hash: md5
+      md5: 8051e3727e62ad8d048369b575eb2b42
+      size: 2168
+    params:
+      params.yaml:
+        linear_regression:
+          model_name: LinearRegression
+    outs:
+    - path: data/models/LinearRegression_prod.csv
+      hash: md5
+      md5: 55b1001795b465a08c68a4fa39bdb55b
+      size: 118
+    - path: data/models/LinearRegression_prod.joblib
+      hash: md5
+      md5: 461bee6e3645e984491c4de47a70554e
+      size: 965
+  NN_train:
+    cmd: python NN.py -id data/prepared -om data/models/nn
+    deps:
+    - path: NN.py
+      hash: md5
+      md5: 7adab0665ec391c8641e0473b4fa95e6
+      size: 3508
+    - path: data/prepared
+      hash: md5
+      md5: da3edcc5e1fc80cc702c9be7cf8e239e.dir
+      size: 249505
+      nfiles: 9
+    params:
+      params.yaml:
+        NN_params:
+          hidden_layers:
+          - 32
+          - 64
+          - 64
+          - 32
+          activation: sigmoid
+          learning_rate: 0.001
+          epochs: 1300
+    outs:
+    - path: data/models/nn
+      hash: md5
+      md5: f12ad387c87880e992db099a20774836.dir
+      size: 132519
+      nfiles: 1
+  NN_prod_version:
+    cmd: python NN_prod_version.py -id data/prepared -om data/models/nn_prod_version
+    deps:
+    - path: NN_prod_version.py
+      hash: md5
+      md5: 23df156c150983b2d7bcdbc1ad7becc1
+      size: 3803
+    - path: data/prepared
+      hash: md5
+      md5: da3edcc5e1fc80cc702c9be7cf8e239e.dir
+      size: 249505
+      nfiles: 9
+    params:
+      params.yaml:
+        NN_params:
+          hidden_layers:
+          - 32
+          - 64
+          - 64
+          - 32
+          activation: relu
+          learning_rate: 0.00025
+          epochs: 500
+    outs:
+    - path: data/models/nn_prod_version
+      hash: md5
+      md5: e3241fad3d119e8e558b64cb25153465.dir
+      size: 140848
+      nfiles: 1
+  NN_prod:
+    cmd: python NN_full.py -id data/prepared -om data/models/nn_prod
+    deps:
+    - path: NN_full.py
+      hash: md5
+      md5: c61aa09e1e7ed3a0de9b5220a1961381
+      size: 2947
+    - path: data/prepared
+      hash: md5
+      md5: da3edcc5e1fc80cc702c9be7cf8e239e.dir
+      size: 249505
+      nfiles: 9
+    params:
+      params.yaml:
+        NN_params:
+          hidden_layers:
+          - 32
+          - 64
+          - 64
+          - 32
+          activation: sigmoid
+          learning_rate: 0.001
+          epochs: 1300
+    outs:
+    - path: data/models/nn_prod
+      hash: md5
+      md5: 73e6a2b886d4cc09e5608339a5df3309.dir
+      size: 132519
+      nfiles: 1
+  NN_val:
+    cmd: python NN_val.py -id data/prepared -md data/models/nn -od data/models/nn_val
+    deps:
+    - path: NN_val.py
+      hash: md5
+      md5: 47a43ab78cf34fc14fa6c7a6a9dc3e4a
+      size: 1850
+    - path: data/models/nn/ModelForTGroup.keras
+      hash: md5
+      md5: 82fd8d47fbbac8c492f9161777f87260
+      size: 132519
+    - path: data/prepared
+      hash: md5
+      md5: da3edcc5e1fc80cc702c9be7cf8e239e.dir
+      size: 249505
+      nfiles: 9
+    params:
+      params.yaml:
+        NN_params:
+          hidden_layers:
+          - 32
+          - 64
+          - 64
+          - 32
+          activation: sigmoid
+          learning_rate: 0.001
+          epochs: 1300
+    outs:
+    - path: data/models/nn_val
+      hash: md5
+      md5: 702f06b6d4b251f6674bc25e49af745c.dir
+      size: 49
+      nfiles: 1

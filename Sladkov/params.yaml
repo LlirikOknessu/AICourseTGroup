@@ -1,0 +1,13 @@
+
+data_preparation:
+  train_test_ratio: 0.7
+  train_val_raitio: 0.8
+  random_state: 42
+linear_regression:
+  model_name: 'LinearRegression'
+NN_params:
+  hidden_layers: [32,64,64,32]
+  activation: 'sigmoid'
+  learning_rate: 0.001
+  epochs: 1300
+
