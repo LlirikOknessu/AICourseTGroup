@@ -10,7 +10,7 @@ from joblib import load
 
 LINEAR_MODELS_MAPPER = {'Ridge': Ridge,
                         'LinearRegression': LinearRegression}
-
+#aaaaaa
 def parser_args_for_sac():
     parser = argparse.ArgumentParser(description='Paths parser')
     parser.add_argument('--input_dir', '-id', type=str, default='data/prepared/',

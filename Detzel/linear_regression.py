@@ -48,7 +48,7 @@ if __name__ == '__main__':
     y_mean = y_test.mean()
     y_std = y_test.std()  # Standard deviation of the test target values
 
-    #y_pred_baseline = [y_mean] * len(y_test)  изменить baseline на нормальное распределениее
+    #y_pred_baseline = [y_mean] * len(y_test)  изменить baseline на нормальное распределен
     y_pred_baseline = np.random.normal(loc=y_mean, scale=y_std, size=len(y_test))
     predicted_values = np.squeeze(reg.predict(X_test))
 

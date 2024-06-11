@@ -7,7 +7,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_absolute_error
 from joblib import dump
-
+#aaaa
 LINEAR_MODELS_MAPPER = {'Ridge': Ridge,
                         'LinearRegression': LinearRegression}
 

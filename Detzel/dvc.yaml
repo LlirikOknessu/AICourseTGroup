@@ -37,3 +37,16 @@ stages:
       - data/models/${linear_regression.model_name}_prod.joblib
     params:
       - linear_regression
+  nn_training:
+    cmd: python nn_training.py
+    deps:
+      - nn_training.py
+      - data/prepared/X_train.csv
+      - data/prepared/y_train.csv
+      - data/prepared/X_test.csv
+      - data/prepared/y_test.csv
+    outs:
+      - data/models/nn
+      - data/logs
+    params:
+      - nn_training
