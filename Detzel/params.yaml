@@ -1,0 +1,16 @@
+data_preparation:
+  train_test_ratio: 0.8
+  train_val_raitio: 0.95
+  random_state: 42
+linear_regression:
+  model_name: 'LinearRegression'
+nn_training:
+  input_dim: 3
+  output_dim: 1
+  hidden_layers: [32, 64, 32]
+  activation: 'relu'
+  learning_rate: 0.001
+  epochs: 220
+  batch_size: 64
+  buffer_size: 128
+  validation_split: 0.2
