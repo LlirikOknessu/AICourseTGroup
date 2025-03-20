@@ -1,0 +1,9 @@
+input_dim = 4  # Размерность входных данных
+output_dim = 1  # Размерность выходных данных
+hidden_layers = [64, 128, 128, 64]  # Количество нейронов в каждом скрытом слое
+activation = 'sigmoid'  # Функция активации для скрытых слоев
+learning_rate = 0.0005
+epochs = 700
+
+BATCH_SIZE = 256
+BUFFER_SIZE = 512
